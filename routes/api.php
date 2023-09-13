@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Cards\CardsController;
+use App\Http\Controllers\Folders\FoldersController;
+use App\Http\Controllers\Lists\ListsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +19,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1/', function(){
     Route::resource("cards", CardsController::class);
-    Route::resource("lists", CardsController::class);
-    Route::resource("folders", CardsController::class);
+    Route::resource("lists", ListsController::class);
+    Route::resource("folders", FoldersController::class);
 });
