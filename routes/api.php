@@ -17,4 +17,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1/', function(){
     Route::resource("cards", CardsController::class);
+    Route::resource("lists", CardsController::class);
+    Route::resource("folders", CardsController::class);
 });
