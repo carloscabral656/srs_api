@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
-            $table->unsignedBigInteger('id_user');
-            $table->foreign('id_user')->references('id')->on('users');
-            $table->unsignedBigInteger('id_role');
-            $table->foreign('id_role')->references('id')->on('roles');
+        Schema::create('cards', function (Blueprint $table) {
+            $table->id();
+            $table->char('title', 50);
+            $table->string('description');
+            $table->string('image');
+            $table->unsignedBigInteger('id_language');
+            $table->foreign('id_language')->references('id')->on('languages');
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('cards');
     }
 };
