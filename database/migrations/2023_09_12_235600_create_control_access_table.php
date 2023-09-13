@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('card', function (Blueprint $table) {
+        Schema::create('control_access', function (Blueprint $table) {
             $table->id();
-            $table->string("title");
-            $table->string("idiom");
-            $table->string("definition");
-            $table->string("image");
+            $table->string('description');
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('card');
+        Schema::dropIfExists('control_access');
     }
 };
