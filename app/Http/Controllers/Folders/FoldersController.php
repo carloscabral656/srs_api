@@ -1,21 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\Lists;
+namespace App\Http\Controllers\Folders;
 
 use App\Http\Controllers\Controller;
+use App\Services\Folders\FoldersService;
+use Illuminate\Http\Request;
 use App\Services\Lists\ListsService;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
-class ListsController extends Controller
+class FoldersController extends Controller
 {
-    protected ListsService $listsService;
+    protected FoldersService $folderService;
 
-    public function __construct(ListsService $listsService)
+    public function __construct(ListsService $folderService)
     {
-        $this->listsService = $listsService;
+        $this->folderService = $folderService;
     }
 
     /**
@@ -26,8 +27,8 @@ class ListsController extends Controller
     public function index()
     {
         try{
-            $lists = $this->listsService->index();
-            return response($lists, 200)
+            $folders = $this->folderService->index();
+            return response($folders, 200)
             ->header("Content-Type", "application/json");
         }catch(Exception $e){
             return response($e->getMessage(), 400)
@@ -45,13 +46,14 @@ class ListsController extends Controller
     {
         try{
             $request->validate([
-                "title" => "required"
+                "title" => "required",
+                "id_user" => "required"
             ]);
 
             DB::beginTransaction();
-            $list = $this->listsService->store($request->all());
+            $folder = $this->folderService->store($request->all());
             DB::commit();
-            return response($list, 201)
+            return response($folder, 201)
                     ->header("Content-Type", "application/json");
         }catch(ValidationException $v){
             DB::rollBack();
@@ -73,9 +75,9 @@ class ListsController extends Controller
     public function show($id)
     {
         try{
-            $list = $this->listsService->findBy($id);
+            $list = $this->folderService->findBy($id);
             if(empty($list)){
-                return response("List doesn't found.", 404)
+                return response("Folder doesn't found.", 404)
                     ->header("Content-Type", "application/json");
             }
             return response($list, 200)
@@ -97,13 +99,13 @@ class ListsController extends Controller
     public function update(Request $request, $id)
     {
         try{
-            $list = $this->listsService->findBy($id);
-            if(empty($list)){
-                return response("List doesn't found.", 404)
+            $folder = $this->folderService->findBy($id);
+            if(empty($folder)){
+                return response("Folder doesn't found.", 404)
                     ->header("Content-Type", "application/json");
             }
-            $list->update($request->all());
-            return response($list, 200)
+            $folder->update($request->all());
+            return response($folder, 200)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
             return response($e->getMessage(), 400)
@@ -120,9 +122,9 @@ class ListsController extends Controller
     public function destroy($id)
     {
         try{
-            $list = $this->listsService->destroy($id);
-            if(empty($list)){
-                return response("List doesn't found.", 404)
+            $folder = $this->folderService->destroy($id);
+            if(empty($folder)){
+                return response("Folder doesn't found.", 404)
                     ->header("Content-Type", "application/json");
             }
             return response(null, 204)
