@@ -11,4 +11,8 @@ class GroupsService extends ServiceAbstract
     {
         parent::__construct($group);
     }
+
+    public function store(array $data){
+        return $this->model;
+    }
 }

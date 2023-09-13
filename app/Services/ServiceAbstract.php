@@ -62,7 +62,7 @@ class ServiceAbstract
      * @param  int  $id
      * @return ?Model
      */
-    public function update(array $data, $id) 
+    public function update(array $data, $id)
     {
         $resource = $this->model->find($id);
         if(empty($resource)){

@@ -46,6 +46,7 @@ class GroupsController extends Controller
         try{
             $request->validate([
                 "title"   => "required",
+                "users"   => "required"
             ]);
             DB::beginTransaction();
             $group = $this->groupsService->store($request->all());
