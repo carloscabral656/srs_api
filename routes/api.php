@@ -4,7 +4,7 @@ use App\Http\Controllers\Cards\CardsController;
 use App\Http\Controllers\Folders\FoldersController;
 use App\Http\Controllers\Groups\GroupsController;
 use App\Http\Controllers\Lists\ListsController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Roles\RolesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,9 +18,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1/', function(){
-    Route::resource("cards", CardsController::class);
-    Route::resource("lists", ListsController::class);
-    Route::resource("folders", FoldersController::class);
-    Route::resource("groups", GroupsController::class);
+Route::prefix('/v1')->group(function(){
+    Route::resource("/cards", CardsController::class);
+    Route::resource("/lists", ListsController::class);
+    Route::resource("/folders", FoldersController::class);
+    Route::resource("/groups", GroupsController::class);
+    Route::resource("/roles", RolesController::class);
 });
