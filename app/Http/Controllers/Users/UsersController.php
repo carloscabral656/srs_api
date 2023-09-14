@@ -74,12 +74,12 @@ class UsersController extends Controller
     public function show($id)
     {
         try{
-            $group = $this->userService->findBy($id);
-            if(empty($group)){
+            $user = $this->userService->findBy($id);
+            if(empty($user)){
                 return response("User doesn't found.", 404)
                     ->header("Content-Type", "application/json");
             }
-            return response($group, 200)
+            return response($user, 200)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
             return response($e->getMessage(), 400)
@@ -98,13 +98,13 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
         try{
-            $group = $this->userService->findBy($id);
-            if(empty($folder)){
+            $user = $this->userService->findBy($id);
+            if(empty($user)){
                 return response("User doesn't found.", 404)
                     ->header("Content-Type", "application/json");
             }
-            $group->update($request->all());
-            return response($group, 200)
+            $user->update($request->all());
+            return response($user, 200)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
             return response($e->getMessage(), 400)
