@@ -6,6 +6,7 @@ use App\Http\Controllers\Groups\GroupsController;
 use App\Http\Controllers\Lists\ListsController;
 use App\Http\Controllers\Users\UsersController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Roles\RolesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,9 +21,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('/v1')->group(function(){
-    Route::resource("/users"  ,   UsersController::class);
-    Route::resource("/cards"  ,   CardsController::class);
-    Route::resource("/lists"  ,   ListsController::class);
+    Route::resource("/users", UsersController::class);
+    Route::resource("/cards", CardsController::class);
+    Route::resource("/lists", ListsController::class);
     Route::resource("/folders", FoldersController::class);
-    Route::resource("/groups" ,  GroupsController::class);
+    Route::resource("/groups", GroupsController::class);
+    Route::resource("/roles", RolesController::class);
 });

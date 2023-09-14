@@ -48,8 +48,8 @@ class CardsController extends Controller{
                 "title" => "required", 
                 "idiom" => "required", 
                 "definition" => "required",
+                "id_list" => "required"
             ]);
-
             DB::beginTransaction();
             $card = $this->cardService->store($request->all());
             DB::commit();

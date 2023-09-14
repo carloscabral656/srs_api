@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Users;
+namespace App\Http\Controllers\Roles;
 
 use App\Http\Controllers\Controller;
-use App\Services\Users\UsersService;
+use App\Services\Roles\RolesService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
-class UsersController extends Controller
+class RolesController extends Controller
 {
-    protected UsersService $userService;
+    protected RolesService $rolesService;
 
-    public function __construct(UsersService $userService)
+    public function __construct(RolesService $rolesService)
     {
-        $this->userService = $userService;
+        $this->rolesService = $rolesService;
     }
 
     /**
@@ -26,9 +26,9 @@ class UsersController extends Controller
     public function index()
     {
         try{
-            $users = $this->userService->index();
-            return response($users, 200)
-            ->header("Content-Type", "application/json");
+            $roles = $this->rolesService->index();
+            return response($roles, 200)
+            ->header("Content-Type", "application/json");;
         }catch(Exception $e){
             return response($e->getMessage(), 400)
                     ->header("Content-Type", "application/json");
@@ -45,13 +45,12 @@ class UsersController extends Controller
     {
         try{
             $request->validate([
-                "title"   => "required",
-                "users"   => "required"
+                "description" => "required", 
             ]);
             DB::beginTransaction();
-            $user = $this->userService->store($request->all());
+            $role = $this->rolesService->store($request->all());
             DB::commit();
-            return response($user, 201)
+            return response($role, 201)
                     ->header("Content-Type", "application/json");
         }catch(ValidationException $v){
             DB::rollBack();
@@ -73,12 +72,12 @@ class UsersController extends Controller
     public function show($id)
     {
         try{
-            $group = $this->userService->findBy($id);
-            if(empty($group)){
-                return response("User doesn't found.", 404)
+            $role = $this->rolesService->findBy($id);
+            if(empty($role)){
+                return response("Role wasn't found.", 404)
                     ->header("Content-Type", "application/json");
             }
-            return response($group, 200)
+            return response($role, 200)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
             return response($e->getMessage(), 400)
@@ -97,13 +96,13 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
         try{
-            $group = $this->userService->findBy($id);
-            if(empty($folder)){
-                return response("User doesn't found.", 404)
+            $role = $this->rolesService->findBy($id);
+            if(empty($role)){
+                return response("Role wasn't found.", 404)
                     ->header("Content-Type", "application/json");
             }
-            $group->update($request->all());
-            return response($group, 200)
+            $role->update($request->all());
+            return response($role, 200)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
             return response($e->getMessage(), 400)
@@ -120,9 +119,9 @@ class UsersController extends Controller
     public function destroy($id)
     {
         try{
-            $user = $this->userService->destroy($id);
-            if(empty($user)){
-                return response("User doesn't found.", 404)
+            $role = $this->rolesService->destroy($id);
+            if(empty($role)){
+                return response("Role doesn't found.", 404)
                     ->header("Content-Type", "application/json");
             }
             return response(null, 204)

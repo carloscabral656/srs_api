@@ -10,5 +10,5 @@ class Card extends Model
     use HasFactory;
 
     protected $table = 'card';
-    protected $fillable = ["title", "idiom", "definition", "image"];
+    protected $fillable = ["title", "idiom", "definition", "image", "id_list"];
 }
