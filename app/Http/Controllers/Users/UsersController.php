@@ -1,33 +1,31 @@
 <?php
 
-namespace App\Http\Controllers\Groups;
+namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
-use App\Services\Groups\GroupsService;
+use App\Services\Users\UsersService;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 
-class GroupsController extends Controller
+class UsersController extends Controller
 {
-    protected GroupsService $groupsService;
+    protected UsersService $userService;
 
-    public function __construct(GroupsService $groupsService)
+    public function __construct(UsersService $userService)
     {
-        $this->groupsService = $groupsService;
+        $this->userService = $userService;
     }
 
     /**
      * Display a listing of the resource.
-     *re
+     *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
         try{
-            $groups = $this->groupsService->index();
-            return response($groups, 200)
+            $users = $this->userService->index();
+            return response($users, 200)
             ->header("Content-Type", "application/json");
         }catch(Exception $e){
             return response($e->getMessage(), 400)

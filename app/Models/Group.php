@@ -12,6 +12,6 @@ class Group extends Model
     protected $fillable = ["title", "description"];
 
     public function users(){
-        return $this->hasManyThrough(User::class, 'user_group', 'id_group', 'id_user');
+        return $this->belongsToMany(User::class, 'user_group', 'id_group', 'id_user');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Services\Groups;
 
 use App\Models\Group;
 use App\Services\ServiceAbstract;
+use Exception;
 
 class GroupsService extends ServiceAbstract
 {
@@ -13,6 +14,14 @@ class GroupsService extends ServiceAbstract
     }
 
     public function store(array $data){
-        return $this->model;
+        try{
+            $title = $data['title'];
+            $description = $data['description'];
+            $users = $data['users'];
+            $this->model->store(['title' => $title, 'description' => $description]);
+            $this->model->users()->sync($users);
+        }catch(Exception $e){
+            throw $e;
+        }
     }
 }
