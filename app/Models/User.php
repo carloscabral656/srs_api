@@ -24,6 +24,8 @@ class User extends Authenticatable
         'age'
     ];
 
+    protected $with = ['roles'];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -43,4 +45,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function roles(){
+        return $this->belongsToMany(Roles::class, 'user_role', 'id_user', 'id_role');
+    }
 }

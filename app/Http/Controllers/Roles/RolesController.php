@@ -45,7 +45,7 @@ class RolesController extends Controller
     {
         try{
             $request->validate([
-                "description" => "required", 
+                "description" => "required",
             ]);
             DB::beginTransaction();
             $role = $this->rolesService->store($request->all());
