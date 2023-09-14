@@ -45,8 +45,9 @@ class UsersController extends Controller
     {
         try{
             $request->validate([
-                "title"   => "required",
-                "users"   => "required"
+                'name' => "required",
+                'email' => "required",
+                'password' => "required"
             ]);
             DB::beginTransaction();
             $user = $this->userService->store($request->all());
