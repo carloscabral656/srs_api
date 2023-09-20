@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Globals\HttpStatusCodes;
 use App\Http\Controllers\Controller;
 use App\Services\Users\UsersService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 
 class UsersController extends Controller
@@ -27,10 +29,10 @@ class UsersController extends Controller
     {
         try{
             $users = $this->userService->index();
-            return response($users, 200)
+            return response($users, HttpStatusCodes::OK)
             ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -53,15 +55,15 @@ class UsersController extends Controller
             DB::beginTransaction();
             $user = $this->userService->store($request->all());
             DB::commit();
-            return response($user, 201)
+            return response($user, HttpStatusCodes::CREATED)
                     ->header("Content-Type", "application/json");
         }catch(ValidationException $v){
             DB::rollBack();
-            return response($v->errors(), 400)
+            return response($v->errors(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                 ->header("Content-Type", "application/json");
         }catch(Exception $e){
             DB::rollBack();
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -77,13 +79,13 @@ class UsersController extends Controller
         try{
             $user = $this->userService->findBy($id);
             if(empty($user)){
-                return response("User doesn't found.", 404)
+                return response("User doesn't found.", HttpStatusCodes::NOT_FOUND)
                     ->header("Content-Type", "application/json");
             }
-            return response($user, 200)
+            return response($user, HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -101,14 +103,14 @@ class UsersController extends Controller
         try{
             $user = $this->userService->findBy($id);
             if(empty($user)){
-                return response("User doesn't found.", 404)
+                return response("User doesn't found.", HttpStatusCodes::NOT_FOUND)
                     ->header("Content-Type", "application/json");
             }
             $user->update($request->all());
-            return response($user, 200)
+            return response($user, HttpStatusCodes::OK)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -124,13 +126,13 @@ class UsersController extends Controller
         try{
             $user = $this->userService->destroy($id);
             if(empty($user)){
-                return response("User doesn't found.", 404)
+                return response("User doesn't found.", HttpStatusCodes::NOT_FOUND)
                     ->header("Content-Type", "application/json");
             }
-            return response(null, 204)
+            return response(null, HttpStatusCodes::NO_CONTENT)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                 ->header("Content-Type", "application/json");
         }
     }
