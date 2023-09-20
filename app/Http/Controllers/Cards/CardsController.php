@@ -45,8 +45,8 @@ class CardsController extends Controller{
     {
         try{
             $request->validate([
-                "title" => "required", 
-                "idiom" => "required", 
+                "title" => "required",
+                "idiom" => "required",
                 "definition" => "required",
                 "id_list" => "required"
             ]);
