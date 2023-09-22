@@ -8,7 +8,6 @@ use App\Services\Users\UsersService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 
 class UsersController extends Controller

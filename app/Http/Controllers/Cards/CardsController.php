@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cards;
 
+use App\Globals\HttpStatusCodes;
 use App\Http\Controllers\Controller;
 use App\Services\Cards\CardsService;
 use Exception;
@@ -27,10 +28,10 @@ class CardsController extends Controller{
     {
         try{
             $cards = $this->cardService->index();
-            return response($cards, 200)
+            return response($cards, HttpStatusCodes::OK)
             ->header("Content-Type", "application/json");;
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -53,15 +54,15 @@ class CardsController extends Controller{
             DB::beginTransaction();
             $card = $this->cardService->store($request->all());
             DB::commit();
-            return response($card, 201)
+            return response($card, HttpStatusCodes::CREATED)
                     ->header("Content-Type", "application/json");
         }catch(ValidationException $v){
             DB::rollBack();
-            return response($v->errors(), 400)
+            return response($v->errors(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                 ->header("Content-Type", "application/json");
         }catch(Exception $e){
             DB::rollBack();
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -77,13 +78,13 @@ class CardsController extends Controller{
         try{
             $card = $this->cardService->findBy($id);
             if(empty($card)){
-                return response("Card doesn't found.", 404)
+                return response("Card doesn't found.", HttpStatusCodes::NOT_FOUND)
                     ->header("Content-Type", "application/json");
             }
-            return response($card, 200)
+            return response($card, HttpStatusCodes::OK)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -101,14 +102,14 @@ class CardsController extends Controller{
         try{
             $card = $this->cardService->findBy($id);
             if(empty($card)){
-                return response("Card doesn't found.", 404)
+                return response("Card doesn't found.", HttpStatusCodes::NOT_FOUND)
                     ->header("Content-Type", "application/json");
             }
             $card->update($request->all());
-            return response($card, 200)
+            return response($card, HttpStatusCodes::OK)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -124,14 +125,14 @@ class CardsController extends Controller{
         try{
             $user = $this->cardService->destroy($id);
             if(empty($card)){
-                return response("Card doesn't found.", 404)
+                return response("Card doesn't found.", HttpStatusCodes::NOT_FOUND)
                     ->header("Content-Type", "application/json");
             }
             $card->delete();
-            return response(null, 204)
+            return response(null, HttpStatusCodes::NO_CONTENT)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                 ->header("Content-Type", "application/json");
         }
     }
