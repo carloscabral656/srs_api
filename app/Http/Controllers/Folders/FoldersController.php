@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Folders;
 
+use App\Globals\HttpStatusCodes;
 use App\Http\Controllers\Controller;
 use App\Services\Folders\FoldersService;
 use Illuminate\Http\Request;
@@ -28,10 +29,10 @@ class FoldersController extends Controller
     {
         try{
             $folders = $this->folderService->index();
-            return response($folders, 200)
+            return response($folders, HttpStatusCodes::OK)
             ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -53,15 +54,15 @@ class FoldersController extends Controller
             DB::beginTransaction();
             $folder = $this->folderService->store($request->all());
             DB::commit();
-            return response($folder, 201)
+            return response($folder, HttpStatusCodes::CREATED)
                     ->header("Content-Type", "application/json");
         }catch(ValidationException $v){
             DB::rollBack();
-            return response($v->errors(), 400)
+            return response($v->errors(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                 ->header("Content-Type", "application/json");
         }catch(Exception $e){
             DB::rollBack();
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -77,13 +78,13 @@ class FoldersController extends Controller
         try{
             $list = $this->folderService->findBy($id);
             if(empty($list)){
-                return response("Folder doesn't found.", 404)
+                return response("Folder doesn't found.", HttpStatusCodes::NOT_FOUND)
                     ->header("Content-Type", "application/json");
             }
-            return response($list, 200)
+            return response($list, HttpStatusCodes::OK)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -101,14 +102,14 @@ class FoldersController extends Controller
         try{
             $folder = $this->folderService->findBy($id);
             if(empty($folder)){
-                return response("Folder doesn't found.", 404)
+                return response("Folder doesn't found.", HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
             }
             $folder->update($request->all());
-            return response($folder, 200)
+            return response($folder, HttpStatusCodes::OK)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -124,13 +125,13 @@ class FoldersController extends Controller
         try{
             $folder = $this->folderService->destroy($id);
             if(empty($folder)){
-                return response("Folder doesn't found.", 404)
+                return response("Folder doesn't found.", HttpStatusCodes::NOT_FOUND)
                     ->header("Content-Type", "application/json");
             }
-            return response(null, 204)
+            return response(null, HttpStatusCodes::NO_CONTENT)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                 ->header("Content-Type", "application/json");
         }
     }

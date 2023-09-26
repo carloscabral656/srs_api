@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Groups;
 
+use App\Globals\HttpStatusCodes;
 use App\Http\Controllers\Controller;
 use App\Services\Groups\GroupsService;
 use Exception;
@@ -27,10 +28,10 @@ class GroupsController extends Controller
     {
         try{
             $groups = $this->groupsService->index();
-            return response($groups, 200)
+            return response($groups, HttpStatusCodes::OK)
             ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -51,15 +52,15 @@ class GroupsController extends Controller
             DB::beginTransaction();
             $group = $this->groupsService->store($request->all());
             DB::commit();
-            return response($group, 201)
+            return response($group, HttpStatusCodes::CREATED)
                     ->header("Content-Type", "application/json");
         }catch(ValidationException $v){
             DB::rollBack();
-            return response($v->errors(), 400)
+            return response($v->errors(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                 ->header("Content-Type", "application/json");
         }catch(Exception $e){
             DB::rollBack();
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -75,13 +76,13 @@ class GroupsController extends Controller
         try{
             $group = $this->groupsService->findBy($id);
             if(empty($group)){
-                return response("Group doesn't found.", 404)
+                return response("Group doesn't found.", HttpStatusCodes::NOT_FOUND)
                     ->header("Content-Type", "application/json");
             }
-            return response($group, 200)
+            return response($group, HttpStatusCodes::OK)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -99,14 +100,14 @@ class GroupsController extends Controller
         try{
             $group = $this->groupsService->findBy($id);
             if(empty($folder)){
-                return response("Group doesn't found.", 404)
+                return response("Group doesn't found.", HttpStatusCodes::NOT_FOUND)
                     ->header("Content-Type", "application/json");
             }
             $group->update($request->all());
-            return response($group, 200)
+            return response($group, HttpStatusCodes::OK)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -122,13 +123,13 @@ class GroupsController extends Controller
         try{
             $group = $this->groupsService->destroy($id);
             if(empty($group)){
-                return response("Group doesn't found.", 404)
+                return response("Group doesn't found.", HttpStatusCodes::NOT_FOUND)
                     ->header("Content-Type", "application/json");
             }
-            return response(null, 204)
+            return response(null, HttpStatusCodes::NO_CONTENT)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                 ->header("Content-Type", "application/json");
         }
     }

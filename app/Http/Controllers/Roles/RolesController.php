@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Roles;
 
+use App\Globals\HttpStatusCodes;
 use App\Http\Controllers\Controller;
 use App\Services\Roles\RolesService;
 use Exception;
@@ -27,10 +28,10 @@ class RolesController extends Controller
     {
         try{
             $roles = $this->rolesService->index();
-            return response($roles, 200)
+            return response($roles, HttpStatusCodes::OK)
             ->header("Content-Type", "application/json");;
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -50,15 +51,15 @@ class RolesController extends Controller
             DB::beginTransaction();
             $role = $this->rolesService->store($request->all());
             DB::commit();
-            return response($role, 201)
+            return response($role, HttpStatusCodes::CREATED)
                     ->header("Content-Type", "application/json");
         }catch(ValidationException $v){
             DB::rollBack();
-            return response($v->errors(), 400)
+            return response($v->errors(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                 ->header("Content-Type", "application/json");
         }catch(Exception $e){
             DB::rollBack();
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -74,13 +75,13 @@ class RolesController extends Controller
         try{
             $role = $this->rolesService->findBy($id);
             if(empty($role)){
-                return response("Role wasn't found.", 404)
+                return response("Role wasn't found.", HttpStatusCodes::NOT_FOUND)
                     ->header("Content-Type", "application/json");
             }
-            return response($role, 200)
+            return response($role, HttpStatusCodes::OK)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -98,14 +99,14 @@ class RolesController extends Controller
         try{
             $role = $this->rolesService->findBy($id);
             if(empty($role)){
-                return response("Role wasn't found.", 404)
+                return response("Role wasn't found.", HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
             }
             $role->update($request->all());
-            return response($role, 200)
+            return response($role, HttpStatusCodes::OK)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                     ->header("Content-Type", "application/json");
         }
     }
@@ -121,13 +122,13 @@ class RolesController extends Controller
         try{
             $role = $this->rolesService->destroy($id);
             if(empty($role)){
-                return response("Role doesn't found.", 404)
+                return response("Role doesn't found.", HttpStatusCodes::NOT_FOUND)
                     ->header("Content-Type", "application/json");
             }
-            return response(null, 204)
+            return response(null, HttpStatusCodes::NO_CONTENT)
                     ->header("Content-Type", "application/json");
         }catch(Exception $e){
-            return response($e->getMessage(), 400)
+            return response($e->getMessage(), HttpStatusCodes::INTERNAL_SERVER_ERROR)
                 ->header("Content-Type", "application/json");
         }
     }
